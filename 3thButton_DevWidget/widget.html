@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf=8">
+  <title>Widget</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id='root'>
+    <div class="timer">
+      <div class="panel" id="hours"></div>
+      <div class="separator">:</div>
+      <div class="panel" id="minutes"></div>
+      <div class="separator">:</div>
+      <div class="panel" id="seconds"></div>
+      <div class="separator">:</div>
+      <div class="panel" id="milliseconds"></div>
+    </div>
+    <div class="buttons">
+      <button id="button-fullscreen" class="button">Set Fullscreen</button>
+      <button id="button-megafon" class="button">Goto Megafon</button>
+    </div>
+
+    <script>
+      const root = document.getElementById('root');
+      const hours = document.getElementById('hours');
+      const minutes = document.getElementById('minutes');
+      const seconds = document.getElementById('seconds');
+      const milliseconds = document.getElementById('milliseconds');
+
+      const state = {
+        isFullScreen: false
+      };
+
+      const btnFullScreen = document.getElementById('button-fullscreen');
+      const btnMegafon = document.getElementById('button-megafon');
+
+      // Interface Event Listener
+      // window.addEventListener('message', (event) => {
+      //   if (event.data.type === 'SET_CALL_SIGNAL') {
+      //     window.CALLSIGN = event.data.value;
+      //   }
+
+      //   if (event.data.type === 'FULLSCREEN_MODE_SET_ENABLED') {
+      //     state.isFullscreen = true;
+      //   }
+
+      //   if (event.data.type === 'FULLSCREEN_MODE_SET_DISABLED') {
+      //     state.isFullscreen = false;
+      //   }
+
+      //   btnFullscreen.textContent = state.isFullscreen
+      //     ? 'Set No Fullscreen'
+      //     : 'Set Fullscreen'
+      // });
+
+      btnFullScreen.onclick = (e) => {
+        // Call API
+        if (window.API && window.API.v1) {
+          window.API.v1.setFullScreen(!state.isFullScreen)
+            .then(({ isFullScreen }) => {
+              state.isFullScreen = isFullScreen;
+              updateFullScreenMode();
+            })
+            .catch();
+        }
+
+        // Dispatch Event
+        // if (!state.isFullscreen) {
+        //   window.parent.postMessage({
+        //     type: 'FULLSCREEN_MODE_SET_ENABLE',
+        //     value: null,
+        //     callsign: window.CALLSIGN
+        //   }, '*');
+        // } else {
+        //   window.parent.postMessage({
+        //     type: 'FULLSCREEN_MODE_SET_DISABLE',
+        //     value: null,
+        //     callsign: window.CALLSIGN
+        //   }, '*');
+        // }
+      }
+
+      btnMegafon.onclick = (e) => {
+        // Call API
+        if (window.API && window.API.v1) {
+          window.API.v1.redirectToService(-21);
+        }
+        // Dispatch Event
+        // window.parent.postMessage({
+        //   type: 'REDIRECT_TO_SERVICE',
+        //   value: -21,
+        //   callsign: window.CALLSIGN
+        // }, '*');
+      }
+
+      setInterval(() => {
+        const now = new Date();
+
+        hours.textContent = `${normalize(now.getHours())}`;
+        minutes.textContent = `${normalize(now.getMinutes())}`;
+        seconds.textContent = `${normalize(now.getSeconds())}`;
+        milliseconds.textContent = `${now.getMilliseconds()}`;
+      }, 10);
+
+      function normalize(number) {
+        if (number < 10) {
+          number = '0' + number;
+        }
+
+        return number;
+      }
+
+      function updateFullScreenMode(isFullScreen) {
+        document.body.style.background = isFullScreen
+          ? "#f3f3f3 url('test.jpeg') no-repeat right top"
+          : '#fff'
+
+        btnFullScreen.textContent = state.isFullScreen
+          ? 'Set No FullScreen'
+          : 'Set FullScreen'
+      }
+    </script>
+</body>
+
+</html>

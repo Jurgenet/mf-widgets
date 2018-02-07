@@ -1,0 +1,33 @@
+<html>
+
+<head></head>
+
+<body>
+  <img id="image" src="troya.png" alt="troya">
+  <script>
+    // Interface Event Listener
+    // window.addEventListener('message', (event) => {
+    //   if (event.data.type === 'SET_CALL_SIGNAL') {
+    //     window.placeName = event.data.value;
+    //   }
+    // });
+
+    const i = document.getElementById('image');
+
+    i.addEventListener('click', e => {
+      // Call API
+      if (window.API && window.API.v1) {
+        window.API.v1.redirectToService(33334);
+
+        // Dispatch Event
+        // window.parent.postMessage({
+        //   type     : 'REDIRECT_TO_SERVICE',
+        //   value    : 33334,
+        //   placeName: window.CALLSIGN
+        // }, '*');
+      }
+    });
+  </script>
+</body>
+
+</html>
