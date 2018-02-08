@@ -52,7 +52,7 @@
 
               state.fullScreenTimeout = setTimeout(() => {
                 updateFullScreenMode(false);
-              }, timeout * 1000);
+              }, timeout); // delay in milliseconds
             })
             .catch();
         } else {
